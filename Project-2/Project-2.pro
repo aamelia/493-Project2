@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui xml network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,9 +16,11 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     flickrcollector.cpp \
     imagecollector.cpp \
-    previewarea.cpp
+    previewarea.cpp \
+    fimage.cpp
 
 HEADERS  += mainwindow.h \
     flickrcollector.h \
     imagecollector.h \
-    previewarea.h
+    previewarea.h \
+    fimage.h
