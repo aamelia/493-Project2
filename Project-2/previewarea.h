@@ -7,6 +7,7 @@
 
 class PreviewArea : public QScrollArea
 {
+
   Q_OBJECT
 
 public:

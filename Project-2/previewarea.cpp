@@ -16,10 +16,11 @@ static const char *NORMAL_STYLE = "border: 1px solid grey";
 static const char *HIDING_STYLE =  "border: none";
 static const int SPACING = 2;
 
-PreviewArea::PreviewArea(int size_incoming, QWidget *parent)
-  : QScrollArea(parent)
+PreviewArea::PreviewArea(int size_incoming, QWidget *parent): QScrollArea(parent)
 {
   FImage *label;
+  //QLabel *label;
+
   QAction *action;
   currentImageLoc = 0;
   heldTimerInterval = 0;
@@ -38,8 +39,9 @@ PreviewArea::PreviewArea(int size_incoming, QWidget *parent)
   hboxLayout->insertSpacing(0,SPACING);
   imageLabelList.clear();
   for (int i=0;i<size;i++)
-    {
-      label = new FImage("loading...",i); //**remove for old
+  {
+      //label = new FImage("loading...",i); //**remove for old
+      label = new FImage(i);
       //label = new QLabel("loading..."); //**remove for new
       imageLabelList.append(label);
       action = new QAction(label);
@@ -49,9 +51,8 @@ PreviewArea::PreviewArea(int size_incoming, QWidget *parent)
       label->setAlignment(Qt::AlignCenter);
       label->setStyleSheet(NORMAL_STYLE);
       hboxLayout->addWidget(label);
-      connect(label,SIGNAL(selected(int)),
-          this,SLOT(previewItemTriggered(int)));
-    }
+      connect(label,SIGNAL(selected(int)),this,SLOT(previewItemTriggered(int)));
+  }
   hboxLayout->addSpacing(SPACING);
   hbox->setLayout(hboxLayout);
   this->setWidget(hbox);
@@ -70,8 +71,11 @@ void PreviewArea::reinitialize()
 {
   imageList.clear();
   if (currentImageLoc >= 0)
+  {
     imageLabelList.at(currentImageLoc)->setStyleSheet(NORMAL_STYLE);
+  }
   currentImageLoc = -1; // gets incremented below
+
   // start off on the first one
   imageLabelList.at(0)->setStyleSheet(HIGHLIGHT_STYLE);
 }
@@ -81,23 +85,28 @@ void PreviewArea::reinitialize()
 void PreviewArea::timerTick(void)
 {
   if (imageList.size() < 3) // arbitrary threshold on when to start
-     return;
+  {
+      return;
+  }
   if (heldTimerInterval != 0) // first timer trigger on new annimation
-    { //  restart immediately since user's been watching the current image
+    {
+      //  restart immediately since user's been watching the current image
       timerInterval = heldTimerInterval; // move to requested speed
       timer->setInterval(timerInterval);
       heldTimerInterval = 0;
     }
   if (currentImageLoc+1 > imageLabelList.size())
+  {
     currentImageLoc = 0;
+  }
   if (currentImageLoc >= 0) // when beginning an animation, don't do this
+  {
     imageLabelList.at(currentImageLoc)->setStyleSheet(NORMAL_STYLE);
+  }
 
-  /*if (imageList.size() == 0)
-    currentImageLoc = 0;
-    else */
   currentImageLoc = (++currentImageLoc)%imageList.size();
   imageLabelList.at(currentImageLoc)->setStyleSheet(HIGHLIGHT_STYLE);
+
   // emit a signal with the new location for whatever the app wants to do
   emit animationChanged(currentImageLoc);
 }
