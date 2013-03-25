@@ -5,6 +5,9 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
+    undoStack = new QUndoStack(this);
+    createUndoView();
+
     photoCounter=0;
     this->setWindowTitle("Amelia Atkinson - Project 1");
     collector = new FlickrCollector(parent);
@@ -69,6 +72,41 @@ MainWindow::MainWindow(QWidget *parent)
     this->setMenuBar(menuBar);
 }
 
+void MainWindow::deleteCollection()
+{
+    //if (diagramScene->selectedItems().isEmpty())
+    //    return;
+
+    QUndoCommand *deleteCollectionCommand = new DeleteCommand(diagramScene);
+    undoStack->push(deleteCollectionCommand);
+}
+
+void MainWindow::deletePhoto()
+ {
+
+ }
+
+void MainWindow::createActions()
+{
+     deleteCollectionAction = new QAction(tr("&Delete Collection"), this);
+     deleteAction->setShortcut(tr("Del"));
+     connect(deleteAction, SIGNAL(triggered()), this, SLOT(deleteCollection()));
+
+     undoAction = undoStack->createUndoAction(this, tr("&Undo"));
+     undoAction->setShortcuts(QKeySequence::Undo);
+
+     redoAction = undoStack->createRedoAction(this, tr("&Redo"));
+     redoAction->setShortcuts(QKeySequence::Redo);
+}
+
+void MainWindow::createUndoView()
+ {
+     undoView = new QUndoView(undoStack);
+     undoView->setWindowTitle(tr("Command List"));
+     undoView->show();
+     undoView->setAttribute(Qt::WA_QuitOnClose, false);
+ }
+
 MainWindow::~MainWindow(){}
 
 void MainWindow::quit()
@@ -94,12 +132,14 @@ void MainWindow::flickrCallback(void)
     if(urlList.size()==0)
     {
         createFlickr();
-        cout << "something hacky" << endl;
+        cout << "collector returned an empty list" << endl;
     }
     else
     {
+        //add the collection to the vector of collections
         allCollections.push_back(urlList);
 
+        //add the collection to the left side
         QListWidgetItem *collectionItem = new QListWidgetItem();
         collectionItem->setFlags(collectionItem->flags() | Qt::ItemIsEditable);
         collectionItem->setText(collector->collectionName());

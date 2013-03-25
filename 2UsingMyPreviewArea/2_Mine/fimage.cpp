@@ -7,7 +7,7 @@
 using namespace std;
 #include <stdio.h>
 
-fimage::fimage(int setIndex, QWidget *parent) : QLabel(parent)
+FImage::FImage(int setIndex, QWidget *parent) : QLabel(parent)
 {
     index = setIndex;
 }

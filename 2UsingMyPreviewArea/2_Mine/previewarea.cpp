@@ -12,7 +12,7 @@ using namespace std;
 PreviewArea::PreviewArea (int size, QWidget *parent)
     : QScrollArea(parent)
 {
-    size = 5;
+    size = 10;
     itemNum = 0;
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(timerTick()));
@@ -21,30 +21,26 @@ PreviewArea::PreviewArea (int size, QWidget *parent)
     container = new QWidget;
     layout = new QHBoxLayout();
 
-    QLabel *item1 = new QLabel();
+    FImage *item1 = new FImage(0);
     item1->setFixedSize(100,100);
-    QLabel *item2 = new QLabel();
+    FImage *item2 = new FImage(1);
     item2->setFixedSize(100,100);
-    QLabel *item3 = new QLabel();
+    FImage *item3 = new FImage(2);
     item3->setFixedSize(100,100);
-    QLabel *item4 = new QLabel();
+    FImage *item4 = new FImage(3);
     item4->setFixedSize(100,100);
-    QLabel *item5 = new QLabel();
+    FImage *item5 = new FImage(4);
     item5->setFixedSize(100,100);
-    QLabel *item6 = new QLabel();
+    FImage *item6 = new FImage(5);
     item6->setFixedSize(100,100);
-    QLabel *item7 = new QLabel();
+    FImage *item7 = new FImage(6);
     item7->setFixedSize(100,100);
-    QLabel *item8 = new QLabel();
+    FImage *item8 = new FImage(7);
     item8->setFixedSize(100,100);
-    QLabel *item9 = new QLabel();
+    FImage *item9 = new FImage(8);
     item9->setFixedSize(100,100);
-    QLabel *item10 = new QLabel();
+    FImage *item10 = new FImage(9);
     item10->setFixedSize(100,100);
-
-    QPixmap michigan;
-    michigan = QPixmap("/Users/MiaAtkinson/493Proj1/Project1/Chicago.jpg");
-    michigan.scaled(100, 100, Qt::KeepAspectRatio);
 
     item1->setScaledContents(true);
     item2->setScaledContents(true);
@@ -79,7 +75,6 @@ PreviewArea::PreviewArea (int size, QWidget *parent)
     myLabels.push_back(item9);
     myLabels.push_back(item10);
 
-
     container->setLayout(layout);
     container->setMaximumHeight(110);
     this->setWidget(container);
@@ -109,6 +104,9 @@ void PreviewArea::setPreviewItemAt(int location, QPixmap temp)
     QLabel *temp2 = qobject_cast<QLabel *>(tempW);
     temp2->setScaledContents(true);
     temp2->setPixmap(temp);
+    temp2->pixmap()->
+    //temp2.pixmap(QIcon::Disabled, QIcon::On))
+
     layout->insertWidget(location, temp2);
 }
 

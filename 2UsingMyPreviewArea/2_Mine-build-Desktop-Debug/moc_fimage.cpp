@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'fimage.h'
 **
-** Created: Sat Mar 23 22:36:56 2013
+** Created: Sat Mar 23 23:13:19 2013
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -17,7 +17,7 @@
 #endif
 
 QT_BEGIN_MOC_NAMESPACE
-static const uint qt_meta_data_fimage[] = {
+static const uint qt_meta_data_FImage[] = {
 
  // content:
        6,       // revision
@@ -33,11 +33,11 @@ static const uint qt_meta_data_fimage[] = {
        0        // eod
 };
 
-static const char qt_meta_stringdata_fimage[] = {
-    "fimage\0"
+static const char qt_meta_stringdata_FImage[] = {
+    "FImage\0"
 };
 
-void fimage::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+void FImage::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
     Q_UNUSED(_o);
     Q_UNUSED(_id);
@@ -45,33 +45,33 @@ void fimage::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
     Q_UNUSED(_a);
 }
 
-const QMetaObjectExtraData fimage::staticMetaObjectExtraData = {
+const QMetaObjectExtraData FImage::staticMetaObjectExtraData = {
     0,  qt_static_metacall 
 };
 
-const QMetaObject fimage::staticMetaObject = {
-    { &QLabel::staticMetaObject, qt_meta_stringdata_fimage,
-      qt_meta_data_fimage, &staticMetaObjectExtraData }
+const QMetaObject FImage::staticMetaObject = {
+    { &QLabel::staticMetaObject, qt_meta_stringdata_FImage,
+      qt_meta_data_FImage, &staticMetaObjectExtraData }
 };
 
 #ifdef Q_NO_DATA_RELOCATION
-const QMetaObject &fimage::getStaticMetaObject() { return staticMetaObject; }
+const QMetaObject &FImage::getStaticMetaObject() { return staticMetaObject; }
 #endif //Q_NO_DATA_RELOCATION
 
-const QMetaObject *fimage::metaObject() const
+const QMetaObject *FImage::metaObject() const
 {
     return QObject::d_ptr->metaObject ? QObject::d_ptr->metaObject : &staticMetaObject;
 }
 
-void *fimage::qt_metacast(const char *_clname)
+void *FImage::qt_metacast(const char *_clname)
 {
     if (!_clname) return 0;
-    if (!strcmp(_clname, qt_meta_stringdata_fimage))
-        return static_cast<void*>(const_cast< fimage*>(this));
+    if (!strcmp(_clname, qt_meta_stringdata_FImage))
+        return static_cast<void*>(const_cast< FImage*>(this));
     return QLabel::qt_metacast(_clname);
 }
 
-int fimage::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+int FImage::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = QLabel::qt_metacall(_c, _id, _a);
     if (_id < 0)

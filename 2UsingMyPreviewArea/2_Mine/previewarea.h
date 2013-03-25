@@ -3,6 +3,7 @@
 #include <QtGui>
 #include <QMainWindow>
 #include <QWidget>
+#include "fimage.h"
 
 
 using namespace std;

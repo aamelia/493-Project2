@@ -7,12 +7,12 @@
 
 using namespace std;
 
-class fimage : public QLabel
+class FImage : public QLabel
 {
     Q_OBJECT
 
 public:
-    explicit fimage(int setIndex, QWidget *parent=0);
+    explicit FImage(int setIndex, QWidget *parent=0);
 
 private:
     int index;
