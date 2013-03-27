@@ -8,11 +8,9 @@
 
 class FImage: public QLabel
 {
-    Q_OBJECT
-
 public:
-    FImage();
-    FImage(int index);
+    FImage(int newIndex);
+    ~FImage();
 
 protected:
     int index;

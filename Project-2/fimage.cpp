@@ -7,12 +7,13 @@ using namespace std;
 
 #include <stdio.h>
 
-
-FImage::FImage()
-{
-}
-
 FImage::FImage(int newIndex)
 {
     index = newIndex;
 }
+
+FImage::~FImage()
+{
+
+}
+

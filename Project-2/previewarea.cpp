@@ -1,5 +1,5 @@
 #include "previewarea.h"
-#include "fimage.h"
+#include "FImage.h"
 #include <QtGui>
 
 #include <iostream>

@@ -3,7 +3,7 @@
 
 #include <QtGui>
 #include <QtNetwork>
-#include "fimage.h"
+#include "FImage.h"
 
 class PreviewArea : public QScrollArea
 {
