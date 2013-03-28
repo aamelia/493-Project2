@@ -22,7 +22,6 @@ public:
 
  protected:
   QWidget *hbox;
-  // QList<QLabel *> imageLabelList;
   QList<FImage *> imageLabelList;
   QList<QPixmap> imageList;
   int currentImageLoc;
@@ -39,6 +38,7 @@ public:
   void pauseAnimation(void);
   void restartAnimation(void);
   void previewItemTriggered(int);
+  void setSelected();
 
  signals:
   void animationChanged(int location);

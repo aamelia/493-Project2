@@ -17,12 +17,10 @@ SOURCES += main.cpp\
     fimage.cpp \
     flickrcollector.cpp \
     imagecollector.cpp \
-    previewarea.cpp \
-    deletecollectioncommand.cpp
+    previewarea.cpp
 
 HEADERS  += mainwindow.h \
     fimage.h \
     flickrcollector.h \
     imagecollector.h \
-    previewarea.h \
-    deletecollectioncommand.h
+    previewarea.h

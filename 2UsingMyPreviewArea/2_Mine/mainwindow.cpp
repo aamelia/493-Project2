@@ -5,9 +5,6 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    undoStack = new QUndoStack(this);
-    createUndoView();
-
     photoCounter=0;
     this->setWindowTitle("Amelia Atkinson - Project 1");
     collector = new FlickrCollector(parent);
@@ -71,41 +68,6 @@ MainWindow::MainWindow(QWidget *parent)
     createMenus();
     this->setMenuBar(menuBar);
 }
-
-void MainWindow::deleteCollection()
-{
-    //if (diagramScene->selectedItems().isEmpty())
-    //    return;
-
-    QUndoCommand *deleteCollectionCommand = new DeleteCommand(diagramScene);
-    undoStack->push(deleteCollectionCommand);
-}
-
-void MainWindow::deletePhoto()
- {
-
- }
-
-void MainWindow::createActions()
-{
-     deleteCollectionAction = new QAction(tr("&Delete Collection"), this);
-     deleteAction->setShortcut(tr("Del"));
-     connect(deleteAction, SIGNAL(triggered()), this, SLOT(deleteCollection()));
-
-     undoAction = undoStack->createUndoAction(this, tr("&Undo"));
-     undoAction->setShortcuts(QKeySequence::Undo);
-
-     redoAction = undoStack->createRedoAction(this, tr("&Redo"));
-     redoAction->setShortcuts(QKeySequence::Redo);
-}
-
-void MainWindow::createUndoView()
- {
-     undoView = new QUndoView(undoStack);
-     undoView->setWindowTitle(tr("Command List"));
-     undoView->show();
-     undoView->setAttribute(Qt::WA_QuitOnClose, false);
- }
 
 MainWindow::~MainWindow(){}
 
@@ -175,6 +137,52 @@ void MainWindow::createFlickr(void)
     numCollections++;
 }
 
+void MainWindow::deleteCollection()
+{
+    if(allCollections.size() == 1)
+    {
+        QMessageBox msgbox;
+        msgbox.setText("Cannot delete the final collection");
+        msgbox.setWindowTitle("Delete Error");
+        msgbox.addButton(QMessageBox::Ok);
+        msgbox.exec();
+    }
+    else if (leftPanel->currentRow() == -1)
+    {
+        QMessageBox msgbox;
+        msgbox.setText("No collection selected");
+        msgbox.setWindowTitle("Delete Error");
+        msgbox.addButton(QMessageBox::Ok);
+        msgbox.exec();
+    }
+    else
+    {
+        currentCollection = leftPanel->currentRow();
+        cout << "Deleting collection " << currentCollection << endl;
+        // erase currentCollection from allCollections
+        allCollections.erase (allCollections.begin()+currentCollection);
+        //remove collection from left display
+        leftPanel->takeItem(currentCollection);
+
+        //reset PreviewArea to reflect the deletion
+        if(currentCollection == 0)
+        {
+            resetCollection(0);
+            currentCollection = 0;
+        }
+        else
+        {
+            resetCollection(0);
+            currentCollection = 0;
+        }
+    }
+}
+
+void MainWindow::deleteSelection()
+{
+    cout << "Delete Selection" << endl;
+}
+
 void MainWindow::createMenus()
 {
     QMenu *fileMenu = menuBar->addMenu("File");
@@ -208,9 +216,11 @@ void MainWindow::createMenus()
     connect(temp, SIGNAL(triggered()), this, SLOT(mainStartAnimation()));
     temp->setEnabled(true);
     temp = collectionMenu->addAction("Delete Collection");
-    temp->setEnabled(false);
-    temp = collectionMenu->addAction("Delete Items in Collection");
-    temp->setEnabled(false);
+    connect(temp, SIGNAL(triggered()), this, SLOT(deleteCollection()));
+    temp->setEnabled(true);
+    temp = collectionMenu->addAction("Delete Selected Photos");
+    connect(temp, SIGNAL(triggered()), this, SLOT(deleteSelection()));
+    temp->setEnabled(true);
 
     QMenu *toolsMenu = menuBar->addMenu("Tools");
     temp = toolsMenu->addAction("Play Selected Collections");
@@ -232,7 +242,6 @@ void MainWindow::mainStartAnimation()
             currentCollection = leftPanel->currentRow();
         }
     }
-
     bottom->startAnimation(leftPanel->currentRow());
 }
 

@@ -10,7 +10,7 @@ using namespace std;
 #include <stdio.h>
 
 static const int MAX_PREVIEW = 10;
-static const int DEFAULT_INTERVAL = 4000;
+static const int DEFAULT_INTERVAL = 2500;
 static const char *HIGHLIGHT_STYLE = "border: 2px solid blue";
 static const char *NORMAL_STYLE = "border: 1px solid grey";
 static const char *HIDING_STYLE =  "border: none";
@@ -19,8 +19,6 @@ static const int SPACING = 2;
 PreviewArea::PreviewArea(int size_incoming, QWidget *parent): QScrollArea(parent)
 {
   FImage *label;
-  //QLabel *label;
-
   QAction *action;
   currentImageLoc = 0;
   heldTimerInterval = 0;
@@ -40,9 +38,7 @@ PreviewArea::PreviewArea(int size_incoming, QWidget *parent): QScrollArea(parent
   imageLabelList.clear();
   for (int i=0;i<size;i++)
   {
-      //label = new FImage("loading...",i); //**remove for old
       label = new FImage(i);
-      //label = new QLabel("loading..."); //**remove for new
       imageLabelList.append(label);
       action = new QAction(label);
       label->addAction(action);
@@ -64,7 +60,6 @@ PreviewArea::PreviewArea(int size_incoming, QWidget *parent): QScrollArea(parent
   connect(timer, SIGNAL(timeout()), this, SLOT(timerTick()));
   timer->start(timerInterval);
 }
-
 
 // for loading/starting a new collection
 void PreviewArea::reinitialize()
@@ -126,8 +121,7 @@ void PreviewArea::setPreviewItemAt(int loc, QPixmap pixmap)
 
   // get a scaled down pixmap and install it
   QPixmap pixmap2 = pixmap.scaled(100, 100, Qt::KeepAspectRatio);
-  FImage *label = imageLabelList.at(loc); //**remove for old
-  //QLabel *label = imageLabelList.at(loc); //**remove for new
+  FImage *label = imageLabelList.at(loc);
   imageList.append(pixmap);
   label->setPixmap(pixmap2);
   label->setContentsMargins(0,0,0,0);
@@ -140,12 +134,10 @@ void PreviewArea::deletePreviewItemAt(int loc)
   cout << "deleting image " << loc <<endl;
 }
 
-// unfortunately this can't be used for selecting
 void PreviewArea::setPreviewItemEnabledAt(int loc,bool value)
 {
   imageLabelList.at(loc)->setEnabled(value);
 }
-
 
 QPixmap PreviewArea::previewItemAt(int loc)
 {
@@ -156,7 +148,7 @@ QPixmap PreviewArea::previewItemAt(int loc)
 
 void PreviewArea::startAnimation(int timerInterval_incoming)
 {
-  if (timerInterval_incoming <= 100) // really less than a 1/10 of a sec?
+  if (timerInterval_incoming <= 100)
     timerInterval = DEFAULT_INTERVAL;
   else
     timerInterval = timerInterval_incoming;
@@ -172,6 +164,14 @@ void PreviewArea::stopAnimation()
 {
   if (timer->isActive())
     timer->stop();
+}
+
+void PreviewArea::setSelected()
+{
+        FImage *label;
+        label = new FImage(0);
+        label = imageLabelList.at(0);
+        label->setSelected();
 }
 
 void PreviewArea::pauseAnimation()

@@ -13,9 +13,16 @@ public:
     ~FImage();
 
 protected:
+    void mouseReleaseEvent(QMouseEvent *event);
     int index;
+    bool isSelected;
+    QPixmap original;
+    bool savedOriginal;
+    QIcon *icon;
 
 public slots:
+    void setSelected();
+    void setUnselected();
 
 signals:
 

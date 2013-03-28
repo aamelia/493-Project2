@@ -1,26 +1,31 @@
 #ifndef FIMAGE_H
 #define FIMAGE_H
+
 #include <QtGui>
-#include <QMainWindow>
-#include <QWidget>
-#include <QObject>
+#include <QtNetwork>
+#include <iostream>
+#include <string>
 
-using namespace std;
-
-class FImage : public QLabel
+class FImage: public QLabel
 {
-    Q_OBJECT
-
 public:
-    explicit FImage(int setIndex, QWidget *parent=0);
+    FImage(int newIndex);
+    ~FImage();
 
-private:
+protected:
+    void mouseReleaseEvent(QMouseEvent *event);
     int index;
+    bool isSelected;
+    QPixmap original;
+    bool savedOriginal;
+    QIcon *icon;
+
+public slots:
+    void setSelected();
+    void setUnselected();
 
 signals:
-    
-public slots:
-    
+
 };
 
 #endif // FIMAGE_H

@@ -21,15 +21,10 @@ MainWindow::MainWindow(QWidget *parent)
     QHBoxLayout *imgLayout = new QHBoxLayout;
     mainImage = new QLabel;
     mainImage->setScaledContents(true);
-    mainImage->setMaximumSize(375,375);
+    mainImage->setMaximumSize(400,400);
 
-    //mainImage->setSizePolicy(Qt::KeepAspectRatioByExpanding, Qt::KeepAspectRatioByExpanding);
-    //mainImage->setSizePolicy()
-    //mainImage->setSizePolicy(Qt::PreferredSize, Qt::PreferredSize);
     imgLayout->addWidget(mainImage);
     imageWidget->setLayout(imgLayout);
-
-    //imageWidget->setSizePolicy(QSizePolicy::Expanding);
 
     QVBoxLayout *leftPanelLayout = new QVBoxLayout();
     leftPanelLayout->addWidget(leftPanel);
@@ -46,35 +41,18 @@ MainWindow::MainWindow(QWidget *parent)
     bottomContainer->setLayout(anotherLayout);
     bottomContainer->setFixedHeight(160);
 
-
     //Building the layout of the window
-    ///QSplitter *splitter1 = new QSplitter(Qt::Horizontal, this);
-    ///splitter1->addWidget(leftPanelContainer);
-    ///splitter1->addWidget(imageWidget);
-    ///splitter1->setOpaqueResize(true);
-    ///splitter1->setChildrenCollapsible(true);
-    ///QList<int> tempList;
-    ///tempList.insert(0, 500);
-    ///tempList.insert(0, 200);
-    //splitter1->setSizes(tempList);
-    //mainWindow size policy to prefered
+    QSplitter *splitter1 = new QSplitter(Qt::Horizontal, this);
+    splitter1->addWidget(leftPanelContainer);
+    splitter1->addWidget(imageWidget);
+    splitter1->setOpaqueResize(true);
+    splitter1->setChildrenCollapsible(true);
 
-    //allCollections = new vector<QStringList>;
-    ///QSplitter *splitter2 = new QSplitter(Qt::Vertical, this);
-    ///splitter2->addWidget(splitter1);
-    ///splitter2->addWidget(bottomContainer);
+    QSplitter *splitter2 = new QSplitter(Qt::Vertical, this);
+    splitter2->addWidget(splitter1);
+    splitter2->addWidget(bottomContainer);
 
-    QGridLayout *theGrid = new QGridLayout();
-    theGrid->addWidget(leftPanelContainer, 0, 0);
-    theGrid->addWidget(mainImage, 0, 1);
-    theGrid->addWidget(bottomContainer, 1, 0, 1, 2);
-
-    QWidget *theBiggest = new QWidget();
-    theBiggest->setLayout(theGrid);
-
-    //setCentralWidget(splitter2);
-    setCentralWidget(theBiggest);
-    //setLayout(theGrid);
+    setCentralWidget(splitter2);
     createFlickr();
     createMenus();
     this->setMenuBar(menuBar);
@@ -87,6 +65,7 @@ void MainWindow::quit()
   QApplication::quit();
 }
 
+//loads collection collectionNumber into previewArea
 void MainWindow::resetCollection(int collectionNumber)
 {
     urlList = allCollections[collectionNumber];
@@ -109,16 +88,21 @@ void MainWindow::flickrCallback(void)
     }
     else
     {
+        //adds urlList to the master list
         allCollections.push_back(urlList);
 
+        //adds collection to left panel display
         QListWidgetItem *collectionItem = new QListWidgetItem();
         collectionItem->setFlags(collectionItem->flags() | Qt::ItemIsEditable);
         collectionItem->setText(collector->collectionName());
         leftPanel->addItem(collectionItem);
 
-        QString url;
+        //connect timerTick to change main image
         connect(bottom, SIGNAL(animationChanged(int)), this, SLOT(resetMainImage(int)));
+
         int size = urlList.size();
+        QString url;
+
         for(int i=0; i<size; i++)
         {
             url = urlList.at(i);
@@ -144,6 +128,19 @@ void MainWindow::createFlickr(void)
 {
     collector->execute();
     numCollections++;
+}
+
+void MainWindow::mainStartAnimation()
+{
+    if( leftPanel->currentRow() != -1)
+    {
+        if(currentCollection != leftPanel->currentRow())
+        {
+            resetCollection(leftPanel->currentRow());
+            currentCollection = leftPanel->currentRow();
+        }
+    }
+    bottom->startAnimation(leftPanel->currentRow());
 }
 
 void MainWindow::createMenus()
@@ -187,23 +184,8 @@ void MainWindow::createMenus()
     temp = toolsMenu->addAction("Play Selected Collections");
     temp->setEnabled(false);
     temp = toolsMenu->addAction("Pause Play");
-    connect(temp, SIGNAL(triggered()), bottom, SLOT(stopAnimation()));
+    connect(temp, SIGNAL(triggered()), bottom, SLOT(pauseAnimation()));
     temp->setEnabled(true);
     temp = toolsMenu->addAction("Set Play Interval");
     temp->setEnabled(false);
 }
-
-void MainWindow::mainStartAnimation()
-{
-    if( leftPanel->currentRow() != -1)
-    {
-        if(currentCollection != leftPanel->currentRow())
-        {
-            resetCollection(leftPanel->currentRow());
-            currentCollection = leftPanel->currentRow();
-        }
-    }
-
-    bottom->startAnimation(leftPanel->currentRow());
-}
-

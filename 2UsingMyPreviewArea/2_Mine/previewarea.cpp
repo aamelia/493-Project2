@@ -104,9 +104,6 @@ void PreviewArea::setPreviewItemAt(int location, QPixmap temp)
     QLabel *temp2 = qobject_cast<QLabel *>(tempW);
     temp2->setScaledContents(true);
     temp2->setPixmap(temp);
-    temp2->pixmap()->
-    //temp2.pixmap(QIcon::Disabled, QIcon::On))
-
     layout->insertWidget(location, temp2);
 }
 

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'flickrcollector.h'
 **
-** Created: Sat Mar 23 20:12:30 2013
+** Created: Wed Mar 27 14:11:20 2013
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.4)
 **
 ** WARNING! All changes made in this file will be lost!

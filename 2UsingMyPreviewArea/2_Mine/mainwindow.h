@@ -5,7 +5,6 @@
 #include "flickrcollector.h"
 #include "imagecollector.h"
 #include "previewarea.h"
-#include "deletecollectioncommand.h"
 
 class MainWindow : public QMainWindow
 {
@@ -24,10 +23,8 @@ public slots:
   void resetMainImage(int location);
   void mainStartAnimation();
   void resetCollection(int collectionNumber);
-  void createActions();
-  void createUndoView();
   void deleteCollection();
-  void deletePhoto();
+  void deleteSelection();
 
 private:
   FlickrCollector *collector;
@@ -43,10 +40,6 @@ private:
   int currentCollection;
   int numCollections;
   int photoCounter;
-  QAction *deletePhotoAction;
-  QAction *deleteCollectionAction;
-  QUndoStack *undoStack;
-  QUndoView *undoView;
 
   vector<QStringList> allCollections;
   vector<FImage> allCollectionsImages;
