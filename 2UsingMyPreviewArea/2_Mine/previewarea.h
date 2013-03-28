@@ -19,7 +19,7 @@ private:
     QTimer *timer;
     int itemNum;
     int timerInterval;
-    vector<QLabel *> myLabels;
+    vector<FImage *> myLabels;
 
 public:
     PreviewArea(int size=10, QWidget *parent=0);
@@ -27,12 +27,14 @@ public:
     QPixmap previewItemAt(int);
     void setPreviewItemAt(int, QPixmap);
     void setPreviewItemEnabledAt(int, bool);
-    void deletePreviewItemAt(int);
+    vector<int> deletePreviewItems();
+    FImage fImageAt(int location);
 
 public slots:
     void startAnimation(int timerInterval);
     void stopAnimation();
     void timerTick(void);
+    void resetImages(int newSize);
 
 signals:
     void animationChanged(int);

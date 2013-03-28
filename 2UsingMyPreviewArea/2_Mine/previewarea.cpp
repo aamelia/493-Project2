@@ -21,59 +21,15 @@ PreviewArea::PreviewArea (int size, QWidget *parent)
     container = new QWidget;
     layout = new QHBoxLayout();
 
-    FImage *item1 = new FImage(0);
-    item1->setFixedSize(100,100);
-    FImage *item2 = new FImage(1);
-    item2->setFixedSize(100,100);
-    FImage *item3 = new FImage(2);
-    item3->setFixedSize(100,100);
-    FImage *item4 = new FImage(3);
-    item4->setFixedSize(100,100);
-    FImage *item5 = new FImage(4);
-    item5->setFixedSize(100,100);
-    FImage *item6 = new FImage(5);
-    item6->setFixedSize(100,100);
-    FImage *item7 = new FImage(6);
-    item7->setFixedSize(100,100);
-    FImage *item8 = new FImage(7);
-    item8->setFixedSize(100,100);
-    FImage *item9 = new FImage(8);
-    item9->setFixedSize(100,100);
-    FImage *item10 = new FImage(9);
-    item10->setFixedSize(100,100);
-
-    item1->setScaledContents(true);
-    item2->setScaledContents(true);
-    item3->setScaledContents(true);
-    item4->setScaledContents(true);
-    item5->setScaledContents(true);
-    item6->setScaledContents(true);
-    item7->setScaledContents(true);
-    item8->setScaledContents(true);
-    item9->setScaledContents(true);
-    item10->setScaledContents(true);
-
-    layout->addWidget(item1);
-    layout->addWidget(item2);
-    layout->addWidget(item3);
-    layout->addWidget(item4);
-    layout->addWidget(item5);
-    layout->addWidget(item6);
-    layout->addWidget(item7);
-    layout->addWidget(item8);
-    layout->addWidget(item9);
-    layout->addWidget(item10);
-
-    myLabels.push_back(item1);
-    myLabels.push_back(item2);
-    myLabels.push_back(item3);
-    myLabels.push_back(item4);
-    myLabels.push_back(item5);
-    myLabels.push_back(item6);
-    myLabels.push_back(item7);
-    myLabels.push_back(item8);
-    myLabels.push_back(item9);
-    myLabels.push_back(item10);
+    FImage *temp;
+    for(int i=0; i<10; i++)
+    {
+        temp = new FImage(i);
+        temp->setFixedSize(100,100);
+        temp->setScaledContents(true);
+        layout->addWidget(temp);
+        myLabels.push_back(temp);
+    }
 
     container->setLayout(layout);
     container->setMaximumHeight(110);
@@ -93,8 +49,6 @@ QPixmap PreviewArea::previewItemAt(int location)
     temp3 = QPixmap(*temp2->pixmap());
     setPreviewItemEnabledAt(location, true);
     return temp3;
-
-
 }
 
 void PreviewArea::setPreviewItemAt(int location, QPixmap temp)
@@ -109,22 +63,90 @@ void PreviewArea::setPreviewItemAt(int location, QPixmap temp)
 
 void PreviewArea::setPreviewItemEnabledAt(int location, bool enabled)
 {
+    enabled = true;
+    int size = myLabels.size();
+
     myLabels[location]->setFrameShape(QFrame::Box);
     myLabels[location]->setLineWidth(3);
     if(location == 0)
-        myLabels[9]->setFrameShape(QFrame::NoFrame);
+        myLabels[size-1]->setFrameShape(QFrame::NoFrame);
     else
         myLabels[location-1]->setFrameShape(QFrame::NoFrame);
 
 }
 
-void PreviewArea::deletePreviewItemAt(int location)
-{
-    location=5;
-    /* Does not need to be implemented for this project */
+vector<int> PreviewArea::deletePreviewItems()
+{    
+    vector<int> toDelete;
+    int size = myLabels.size();
+    int numSelected = 1;
+    if(myLabels.size() == 1)
+    {
+        QMessageBox msgBox;
+        msgBox.setText("This will delete all photos from this collection");
+        msgBox.setInformativeText("Do you want to delete selection?");
+        msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+        msgBox.setDefaultButton(QMessageBox::Ok);
+        int ret = msgBox.exec();
+
+        switch (ret)
+        {
+           case QMessageBox::Ok:
+               // Save was clicked
+               break;
+           case QMessageBox::Cancel:
+               // Cancel was clicked
+               return toDelete;
+               break;
+           default:
+               // should never be reached
+               break;
+         }
+    }
+        //myLabels.erase(myLabels.begin());
+        int newSize = size-numSelected;
+        toDelete.push_back(newSize);
+        cout << "The new size of myLabels is:" << newSize << endl;
+
+        //set up toDelete
+        toDelete.push_back(0);
+        return toDelete;
 }
 
 //Public slots
+void PreviewArea :: resetImages (int newSize)
+{
+    stopAnimation();
+
+    //clear hboxlayout layout using layout.takeAt()
+    QLayoutItem* item;
+    while((item = layout->takeAt(0)) != NULL)
+    {
+        delete item->widget();
+        delete item;
+    }
+
+    //clear myLabels
+    myLabels.clear();
+
+    //reset the images
+    cout << "reset the images" << endl;
+    cout << "The new size is: " << newSize << endl;
+
+    /*
+    FImage *temp;
+    for(int i=0; i<newSize; i++)
+    {
+        temp = new FImage(i);
+        temp->setFixedSize(100,100);
+        temp->setScaledContents(true);
+        layout->addWidget(temp);
+        myLabels.push_back(temp);
+    }
+    */
+    //startAnimation(2500);
+}
+
 void PreviewArea :: startAnimation(int timerInterval)
 {
     int temp = timerInterval;
@@ -139,6 +161,6 @@ void PreviewArea :: stopAnimation()
 void PreviewArea :: timerTick(void)
 {
     itemNum++;
-    itemNum = itemNum % 10;
+    itemNum = itemNum % (myLabels.size());
     emit(animationChanged(itemNum));
 }

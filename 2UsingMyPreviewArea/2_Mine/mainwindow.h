@@ -42,10 +42,11 @@ private:
   int photoCounter;
 
   vector<QStringList> allCollections;
-  vector<FImage> allCollectionsImages;
+  vector<int> toDelete;
 
 signals:
   void replaceBottom();
+  void deletedFromMain(int);
 };
 
 #endif // MAINWINDOW_H

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'previewarea.h'
 **
-** Created: Wed Mar 27 22:50:20 2013
+** Created: Thu Mar 28 14:08:55 2013
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_PreviewArea[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       6,   14, // methods
+       7,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -39,6 +39,7 @@ static const uint qt_meta_data_PreviewArea[] = {
       98,   84,   12,   12, 0x0a,
      118,   12,   12,   12, 0x0a,
      134,   12,   12,   12, 0x0a,
+     154,  146,   12,   12, 0x0a,
 
        0        // eod
 };
@@ -48,7 +49,7 @@ static const char qt_meta_stringdata_PreviewArea[] = {
     "previewItemChanged(int)\0"
     "previewItemSelected(int)\0timerInterval\0"
     "startAnimation(int)\0stopAnimation()\0"
-    "timerTick()\0"
+    "timerTick()\0newSize\0resetImages(int)\0"
 };
 
 void PreviewArea::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -63,6 +64,7 @@ void PreviewArea::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         case 3: _t->startAnimation((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 4: _t->stopAnimation(); break;
         case 5: _t->timerTick(); break;
+        case 6: _t->resetImages((*reinterpret_cast< int(*)>(_a[1]))); break;
         default: ;
         }
     }
@@ -100,9 +102,9 @@ int PreviewArea::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 6)
+        if (_id < 7)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 6;
+        _id -= 7;
     }
     return _id;
 }

@@ -23,13 +23,8 @@ MainWindow::MainWindow(QWidget *parent)
     mainImage->setScaledContents(true);
     mainImage->setMaximumSize(375,375);
 
-    //mainImage->setSizePolicy(Qt::KeepAspectRatioByExpanding, Qt::KeepAspectRatioByExpanding);
-    //mainImage->setSizePolicy()
-    //mainImage->setSizePolicy(Qt::PreferredSize, Qt::PreferredSize);
     imgLayout->addWidget(mainImage);
     imageWidget->setLayout(imgLayout);
-
-    //imageWidget->setSizePolicy(QSizePolicy::Expanding);
 
     QVBoxLayout *leftPanelLayout = new QVBoxLayout();
     leftPanelLayout->addWidget(leftPanel);
@@ -67,6 +62,7 @@ MainWindow::MainWindow(QWidget *parent)
     createFlickr();
     createMenus();
     this->setMenuBar(menuBar);
+    connect(this,SIGNAL(deletedFromMain(int)), bottom, SLOT(resetImages(int)));
 }
 
 MainWindow::~MainWindow(){}
@@ -181,6 +177,13 @@ void MainWindow::deleteCollection()
 void MainWindow::deleteSelection()
 {
     cout << "Delete Selection" << endl;
+    toDelete = bottom->deletePreviewItems();
+    for(int i=1; i<toDelete.size(); i++)
+    {
+        cout << "Deleting image with index " << toDelete[i] << endl;
+        allCollections[currentCollection].removeAt(toDelete[i]);
+    }
+    emit deletedFromMain(toDelete[0]);
 }
 
 void MainWindow::createMenus()

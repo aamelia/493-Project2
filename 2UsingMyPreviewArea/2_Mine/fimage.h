@@ -11,11 +11,11 @@ class FImage: public QLabel
 public:
     FImage(int newIndex);
     ~FImage();
+    int index;
+    bool isSelected;
 
 protected:
     void mouseReleaseEvent(QMouseEvent *event);
-    int index;
-    bool isSelected;
     QPixmap original;
     bool savedOriginal;
     QIcon *icon;
