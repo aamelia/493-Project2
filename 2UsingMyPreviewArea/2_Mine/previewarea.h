@@ -19,7 +19,6 @@ private:
     QTimer *timer;
     int itemNum;
     int timerInterval;
-    vector<FImage *> myLabels;
 
 public:
     PreviewArea(int size=10, QWidget *parent=0);
@@ -29,12 +28,15 @@ public:
     void setPreviewItemEnabledAt(int, bool);
     vector<int> deletePreviewItems();
     FImage fImageAt(int location);
+    void deleteImage(int index);
+    void addBlankImages(int num);
+    vector<FImage*> myLabels;
+
 
 public slots:
     void startAnimation(int timerInterval);
     void stopAnimation();
     void timerTick(void);
-    void resetImages(int newSize);
 
 signals:
     void animationChanged(int);

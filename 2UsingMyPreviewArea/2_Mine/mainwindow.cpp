@@ -62,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent)
     createFlickr();
     createMenus();
     this->setMenuBar(menuBar);
-    connect(this,SIGNAL(deletedFromMain(int)), bottom, SLOT(resetImages(int)));
+    //connect(this,SIGNAL(deletedFromMain(int)), bottom, SLOT(Images(int)));
 }
 
 MainWindow::~MainWindow(){}
@@ -110,8 +110,10 @@ void MainWindow::flickrCallback(void)
         {
             url = urlList.at(i);
             image->loadImage(url);
+            cout << "i = " << i << endl;
         }
     }
+    //sets the current collection to the most recently added collection
     currentCollection = leftPanel->count()-1;
 }
 void MainWindow::resetMainImage(int location)
@@ -119,12 +121,26 @@ void MainWindow::resetMainImage(int location)
     mainImage->setPixmap(bottom->previewItemAt(location));
 }
 
+//This method is only called when adding a new collection
+//Therefore we can assume we will be adding 10 images
 void MainWindow::processDownloadedPics(QPixmap temp)
 {
+    if(bottom->myLabels.size() != 10)
+    {
+        //add FImages to make it of size 10
+        cout << "Adding FImages to make previewArea of size 10" << endl;
+        int difference = 10 - bottom->myLabels.size();
+        bottom->addBlankImages(difference);
+    }
     bottom->setPreviewItemAt(photoCounter, temp);
     photoCounter++;
     if(photoCounter == 10)
         photoCounter = 0;
+    cout << "NumCollections == " << numCollections << endl;
+    //for (int i=0; i<numCollections; i++)
+    {
+        //cout << "Collection " << i+1 << " has " << allCollections[i].size() << " items." << endl;
+    }
 }
 
 void MainWindow::createFlickr(void)
@@ -176,14 +192,15 @@ void MainWindow::deleteCollection()
 
 void MainWindow::deleteSelection()
 {
-    cout << "Delete Selection" << endl;
+    //get the photos to delete
     toDelete = bottom->deletePreviewItems();
-    for(int i=1; i<toDelete.size(); i++)
+
+    for(int i=0; i<toDelete.size(); i++)
     {
         cout << "Deleting image with index " << toDelete[i] << endl;
         allCollections[currentCollection].removeAt(toDelete[i]);
+        bottom->deleteImage(toDelete[i]);
     }
-    emit deletedFromMain(toDelete[0]);
 }
 
 void MainWindow::createMenus()

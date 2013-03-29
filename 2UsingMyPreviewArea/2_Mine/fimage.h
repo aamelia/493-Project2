@@ -13,6 +13,8 @@ public:
     ~FImage();
     int index;
     bool isSelected;
+    void setIndex(int newIndex);
+    const FImage& operator=(const FImage& f);
 
 protected:
     void mouseReleaseEvent(QMouseEvent *event);

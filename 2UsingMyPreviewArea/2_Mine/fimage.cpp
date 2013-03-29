@@ -14,6 +14,18 @@ FImage::FImage(int newIndex)
     savedOriginal = false;
 }
 
+const FImage& FImage :: operator=(const FImage& f)
+{
+    /*
+    if(f.isSelected == NULL)
+        cout << "fuck" << endl;
+    else
+    isSelected = f.isSelected;
+    */
+    //index = f.index;
+    return *this;
+}
+
 FImage::~FImage()
 {
 

@@ -36,6 +36,20 @@ PreviewArea::PreviewArea (int size, QWidget *parent)
     this->setWidget(container);
 }
 
+void PreviewArea::addBlankImages(int num)
+{
+    FImage *temp;
+    for(int i=0; i<num; i++)
+    {
+        temp = new FImage(i);
+        temp->setFixedSize(100,100);
+        temp->setScaledContents(true);
+        layout->addWidget(temp);
+        myLabels.push_back(temp);
+    }
+}
+
+
 PreviewArea::~PreviewArea()
 {
 }
@@ -78,8 +92,6 @@ void PreviewArea::setPreviewItemEnabledAt(int location, bool enabled)
 vector<int> PreviewArea::deletePreviewItems()
 {    
     vector<int> toDelete;
-    int size = myLabels.size();
-    int numSelected = 1;
     if(myLabels.size() == 1)
     {
         QMessageBox msgBox;
@@ -103,54 +115,53 @@ vector<int> PreviewArea::deletePreviewItems()
                break;
          }
     }
-        //myLabels.erase(myLabels.begin());
-        int newSize = size-numSelected;
-        toDelete.push_back(newSize);
-        cout << "The new size of myLabels is:" << newSize << endl;
 
-        //set up toDelete
+    /*
+    QWidget *foo = layout->itemAt(0)->widget();
+    FImage *bar = new FImage(0);
+    bar = qobject_cast<FImage*>(foo);
+    if(bar->isSelected)
+    {
+        cout << "success" << endl;
+    }
+
+
+    FImage temp(0);
+    cout <<"before for loop" << endl;
+    for(int i=myLabels.size(); i>=0; i--)
+    {
+        cout << i << endl;
+        temp = *myLabels.at(i);//[i];
+        cout << i << endl;
+        if(temp.isSelected)
+            cout << "i" << endl;
+    }
+    //*/
+        toDelete.push_back(2);
         toDelete.push_back(0);
         return toDelete;
 }
 
-//Public slots
-void PreviewArea :: resetImages (int newSize)
+
+void PreviewArea :: deleteImage (int index)
 {
     stopAnimation();
 
-    //clear hboxlayout layout using layout.takeAt()
     QLayoutItem* item;
-    while((item = layout->takeAt(0)) != NULL)
-    {
-        delete item->widget();
-        delete item;
-    }
+    item = layout->takeAt(index);
+    delete item->widget();
+    delete item;
 
-    //clear myLabels
-    myLabels.clear();
+    myLabels.erase(myLabels.begin()+index);
 
-    //reset the images
-    cout << "reset the images" << endl;
-    cout << "The new size is: " << newSize << endl;
-
-    /*
-    FImage *temp;
-    for(int i=0; i<newSize; i++)
-    {
-        temp = new FImage(i);
-        temp->setFixedSize(100,100);
-        temp->setScaledContents(true);
-        layout->addWidget(temp);
-        myLabels.push_back(temp);
-    }
-    */
-    //startAnimation(2500);
+    startAnimation(2500);
 }
 
+//Public slots
 void PreviewArea :: startAnimation(int timerInterval)
 {
     int temp = timerInterval;
-    timer->start(2000);
+    timer->start(4000);
 }
 
 void PreviewArea :: stopAnimation()
