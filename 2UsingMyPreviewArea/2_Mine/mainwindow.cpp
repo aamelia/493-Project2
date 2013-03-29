@@ -94,6 +94,7 @@ void MainWindow::flickrCallback(void)
     }
     else
     {
+        numCollections++;
         //add the collection to the vector of collections
         allCollections.push_back(urlList);
 
@@ -115,6 +116,12 @@ void MainWindow::flickrCallback(void)
     }
     //sets the current collection to the most recently added collection
     currentCollection = leftPanel->count()-1;
+
+    cout << "NumCollections == " << numCollections << endl;
+    for (int i=0; i<numCollections; i++)
+    {
+        cout << "Collection " << i+1 << " has " << allCollections[i].size() << " items." << endl;
+    }
 }
 void MainWindow::resetMainImage(int location)
 {
@@ -136,17 +143,11 @@ void MainWindow::processDownloadedPics(QPixmap temp)
     photoCounter++;
     if(photoCounter == 10)
         photoCounter = 0;
-    cout << "NumCollections == " << numCollections << endl;
-    //for (int i=0; i<numCollections; i++)
-    {
-        //cout << "Collection " << i+1 << " has " << allCollections[i].size() << " items." << endl;
-    }
 }
 
 void MainWindow::createFlickr(void)
 {
     collector->execute();
-    numCollections++;
 }
 
 void MainWindow::deleteCollection()

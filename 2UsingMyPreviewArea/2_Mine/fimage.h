@@ -5,18 +5,21 @@
 #include <QtNetwork>
 #include <iostream>
 #include <string>
+using namespace std;
 
 class FImage: public QLabel
 {
+    Q_OBJECT
+
 public:
-    FImage(int newIndex);
+    FImage(int newIndex, QWidget *parent=0);
     ~FImage();
+    //const FImage& operator=(const FImage& f);
     int index;
     bool isSelected;
     void setIndex(int newIndex);
-    const FImage& operator=(const FImage& f);
 
-protected:
+private:
     void mouseReleaseEvent(QMouseEvent *event);
     QPixmap original;
     bool savedOriginal;
@@ -27,7 +30,8 @@ public slots:
     void setUnselected();
 
 signals:
+    void isSelectedSignal(int);
+    void isUnselectedSignal(int);
 
 };
-
 #endif // FIMAGE_H

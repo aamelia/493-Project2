@@ -29,6 +29,9 @@ PreviewArea::PreviewArea (int size, QWidget *parent)
         temp->setScaledContents(true);
         layout->addWidget(temp);
         myLabels.push_back(temp);
+        selectedLabels.push_back(false);
+        connect(temp, SIGNAL(isSelectedSignal(int)), this, SLOT(setSelected(int)));
+        connect(temp, SIGNAL(isUnselectedSignal(int)), this, SLOT(setUnselected(int)));
     }
 
     container->setLayout(layout);
@@ -49,6 +52,18 @@ void PreviewArea::addBlankImages(int num)
     }
 }
 
+void PreviewArea::setSelected(int index)
+{
+    selectedLabels.at(index) = true;
+    cout << "Set selectedLabels[" << index << "] to True" << endl;
+}
+
+void PreviewArea::setUnselected(int index)
+{
+    selectedLabels.at(index) = false;
+    cout << "Set selectedLabels[" << index << "] to False" << endl;
+}
+//*/
 
 PreviewArea::~PreviewArea()
 {
@@ -124,16 +139,17 @@ vector<int> PreviewArea::deletePreviewItems()
     {
         cout << "success" << endl;
     }
+    */
 
-
+/*
     FImage temp(0);
     cout <<"before for loop" << endl;
     for(int i=myLabels.size(); i>=0; i--)
     {
         cout << i << endl;
-        temp = *myLabels.at(i);//[i];
+        //temp = *myLabels.at(i);//[i];
         cout << i << endl;
-        if(temp.isSelected)
+        if(myLabels.at(i).isSelected)
             cout << "i" << endl;
     }
     //*/

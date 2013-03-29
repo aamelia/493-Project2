@@ -12,14 +12,6 @@ class PreviewArea : public QScrollArea
 {
     Q_OBJECT
 
-private:
-    QScrollArea *scrollArea;
-    QWidget *container;
-    QHBoxLayout *layout;
-    QTimer *timer;
-    int itemNum;
-    int timerInterval;
-
 public:
     PreviewArea(int size=10, QWidget *parent=0);
     ~PreviewArea();
@@ -31,12 +23,22 @@ public:
     void deleteImage(int index);
     void addBlankImages(int num);
     vector<FImage*> myLabels;
+    vector<bool> selectedLabels;
 
+private:
+    QScrollArea *scrollArea;
+    QWidget *container;
+    QHBoxLayout *layout;
+    QTimer *timer;
+    int itemNum;
+    int timerInterval;
 
 public slots:
     void startAnimation(int timerInterval);
     void stopAnimation();
     void timerTick(void);
+    void setSelected(int);
+    void setUnselected(int);
 
 signals:
     void animationChanged(int);
