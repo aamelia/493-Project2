@@ -107,7 +107,20 @@ void PreviewArea::setPreviewItemEnabledAt(int location, bool enabled)
 vector<int> PreviewArea::deletePreviewItems()
 {    
     vector<int> toDelete;
-    if(myLabels.size() == 1)
+    vector<int> empty;
+    for(int i=myLabels.size()-1; i>=0; i--)
+    {
+        QWidget *foo = layout->itemAt(i)->widget();
+        FImage *bar = new FImage(0);
+        bar = qobject_cast<FImage*>(foo);
+        if(bar->isSelected)
+        {
+            cout << "Success. Index = " << i << endl;
+            toDelete.push_back(i);
+        }
+    }
+
+    if(myLabels.size() == toDelete.size())
     {
         QMessageBox msgBox;
         msgBox.setText("This will delete all photos from this collection");
@@ -119,43 +132,19 @@ vector<int> PreviewArea::deletePreviewItems()
         switch (ret)
         {
            case QMessageBox::Ok:
+                stopAnimation();
                // Save was clicked
                break;
            case QMessageBox::Cancel:
                // Cancel was clicked
-               return toDelete;
+               return empty;
                break;
            default:
                // should never be reached
                break;
          }
     }
-
-    /*
-    QWidget *foo = layout->itemAt(0)->widget();
-    FImage *bar = new FImage(0);
-    bar = qobject_cast<FImage*>(foo);
-    if(bar->isSelected)
-    {
-        cout << "success" << endl;
-    }
-    */
-
-/*
-    FImage temp(0);
-    cout <<"before for loop" << endl;
-    for(int i=myLabels.size(); i>=0; i--)
-    {
-        cout << i << endl;
-        //temp = *myLabels.at(i);//[i];
-        cout << i << endl;
-        if(myLabels.at(i).isSelected)
-            cout << "i" << endl;
-    }
-    //*/
-        toDelete.push_back(2);
-        toDelete.push_back(0);
-        return toDelete;
+    return toDelete;
 }
 
 

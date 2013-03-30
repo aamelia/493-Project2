@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include <QtGui>
 #include <QMainWindow>
+#include <QString>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -77,6 +78,18 @@ void MainWindow::resetCollection(int collectionNumber)
     urlList = allCollections[collectionNumber];
     int size = urlList.size();
     QString url;
+    //print urlList in a seperate window
+    QListWidget *seperateList = new QListWidget;
+    QListWidgetItem *urlItem;
+    for(int i=0; i<size; i++)
+    {
+        urlItem = new QListWidgetItem();
+        urlItem->setFlags(urlItem->flags() | Qt::ItemIsEditable);
+        urlItem->setText(urlList.at(i));
+        seperateList->addItem(urlItem);
+    }
+    seperateList->show();
+
     for(int i=0; i<size; i++)
     {
         url = urlList.at(i);
@@ -111,13 +124,11 @@ void MainWindow::flickrCallback(void)
         {
             url = urlList.at(i);
             image->loadImage(url);
-            cout << "i = " << i << endl;
         }
     }
     //sets the current collection to the most recently added collection
     currentCollection = leftPanel->count()-1;
 
-    cout << "NumCollections == " << numCollections << endl;
     for (int i=0; i<numCollections; i++)
     {
         cout << "Collection " << i+1 << " has " << allCollections[i].size() << " items." << endl;
@@ -128,21 +139,34 @@ void MainWindow::resetMainImage(int location)
     mainImage->setPixmap(bottom->previewItemAt(location));
 }
 
-//This method is only called when adding a new collection
+//This method is only called when playing a new collection
 //Therefore we can assume we will be adding 10 images
 void MainWindow::processDownloadedPics(QPixmap temp)
 {
-    if(bottom->myLabels.size() != 10)
+    bottom->stopAnimation();
+    //make sure there are the correct number of available FImages
+    int difference = 0;
+    if(bottom->myLabels.size()<allCollections[currentCollection].size())
     {
-        //add FImages to make it of size 10
-        cout << "Adding FImages to make previewArea of size 10" << endl;
-        int difference = 10 - bottom->myLabels.size();
+        difference = allCollections[currentCollection].size() - bottom->myLabels.size();
+        cout << "adding " << difference << " images." << endl;
         bottom->addBlankImages(difference);
     }
+    else if(bottom->myLabels.size()>allCollections[currentCollection].size())
+    {
+        difference = bottom->myLabels.size() - allCollections[currentCollection].size();
+        for(int i=0; i<difference; i++)
+        {
+            bottom->deleteImage(toDelete[0]);
+        }
+    }
+
+    //assign the photos
     bottom->setPreviewItemAt(photoCounter, temp);
     photoCounter++;
-    if(photoCounter == 10)
+    if(photoCounter == bottom->myLabels.size())
         photoCounter = 0;
+    bottom->startAnimation(2500);
 }
 
 void MainWindow::createFlickr(void)
@@ -193,12 +217,9 @@ void MainWindow::deleteCollection()
 
 void MainWindow::deleteSelection()
 {
-    //get the photos to delete
     toDelete = bottom->deletePreviewItems();
-
     for(int i=0; i<toDelete.size(); i++)
     {
-        cout << "Deleting image with index " << toDelete[i] << endl;
         allCollections[currentCollection].removeAt(toDelete[i]);
         bottom->deleteImage(toDelete[i]);
     }
@@ -255,9 +276,11 @@ void MainWindow::createMenus()
 
 void MainWindow::mainStartAnimation()
 {
-    if( leftPanel->currentRow() != -1)
+    cout << "In mainStartAnimation(). Should only be called once per PLAY COLLECTION" << endl;
+    photoCounter = 0;
+    if( leftPanel->currentRow() != -1) //if something is selected
     {
-        if(currentCollection != leftPanel->currentRow())
+        if(currentCollection != leftPanel->currentRow()) //if selection is different from what is already playing
         {
             resetCollection(leftPanel->currentRow());
             currentCollection = leftPanel->currentRow();

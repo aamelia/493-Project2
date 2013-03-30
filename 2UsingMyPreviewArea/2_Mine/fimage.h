@@ -14,7 +14,7 @@ class FImage: public QLabel
 public:
     FImage(int newIndex, QWidget *parent=0);
     ~FImage();
-    //const FImage& operator=(const FImage& f);
+    const FImage& operator=(const FImage& f);
     int index;
     bool isSelected;
     void setIndex(int newIndex);

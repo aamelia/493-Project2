@@ -15,7 +15,7 @@ FImage::FImage (int newIndex, QWidget *parent)
     savedOriginal = false;
 }
 
-/*
+
 const FImage& FImage :: operator=(const FImage& f)
 {
     if(f.isSelected == NULL)
@@ -25,7 +25,7 @@ const FImage& FImage :: operator=(const FImage& f)
     index = f.index;
     return *this;
 }
-*/
+
 
 FImage::~FImage()
 {
@@ -33,7 +33,6 @@ FImage::~FImage()
 
 void FImage::setSelected()
 {
-    cout << "Image " << index << " is selected" << endl;
     if(!savedOriginal)
     {
         original = *this->pixmap();
@@ -50,7 +49,6 @@ void FImage::setSelected()
 
 void FImage::setUnselected()
 {
-    cout << "Image " << index << " is unselected" << endl;
     isSelected = false;
     QPixmap tempPixmap;
     tempPixmap = *this->pixmap();
@@ -64,7 +62,6 @@ void FImage::mouseReleaseEvent(QMouseEvent *event)
  {
      if (event->button() == Qt::LeftButton)
      {
-         cout << "Image " << index << " has been clicked" << endl;
          if(isSelected)
          {
              isSelected = false;
