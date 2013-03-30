@@ -6,6 +6,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
+    undoStack = new QUndoStack(this);
     photoCounter=0;
     this->setWindowTitle("Amelia Atkinson - Project 1");
     collector = new FlickrCollector(parent);
@@ -78,6 +79,7 @@ void MainWindow::resetCollection(int collectionNumber)
     urlList = allCollections[collectionNumber];
     int size = urlList.size();
     QString url;
+    /*
     //print urlList in a seperate window
     QListWidget *seperateList = new QListWidget;
     QListWidgetItem *urlItem;
@@ -89,11 +91,12 @@ void MainWindow::resetCollection(int collectionNumber)
         seperateList->addItem(urlItem);
     }
     seperateList->show();
+    */
 
     for(int i=0; i<size; i++)
     {
         url = urlList.at(i);
-        image->loadImage(url);
+        image->loadImage(url); //connected to ProcessDownloadedPics
     }
 }
 
@@ -103,7 +106,7 @@ void MainWindow::flickrCallback(void)
     if(urlList.size()==0)
     {
         createFlickr();
-        cout << "collector returned an empty list" << endl;
+        cout << "Collector returned an empty list. Retrying ..." << endl;
     }
     else
     {
@@ -146,25 +149,26 @@ void MainWindow::processDownloadedPics(QPixmap temp)
     bottom->stopAnimation();
     //make sure there are the correct number of available FImages
     int difference = 0;
-    if(bottom->myLabels.size()<allCollections[currentCollection].size())
+    if((unsigned)bottom->myLabels.size()<(unsigned)allCollections[currentCollection].size())
     {
         difference = allCollections[currentCollection].size() - bottom->myLabels.size();
         cout << "adding " << difference << " images." << endl;
         bottom->addBlankImages(difference);
     }
-    else if(bottom->myLabels.size()>allCollections[currentCollection].size())
+    else if((unsigned)bottom->myLabels.size()>(unsigned)allCollections[currentCollection].size())
     {
         difference = bottom->myLabels.size() - allCollections[currentCollection].size();
+        cout << "removing " << difference << " images." << endl;
         for(int i=0; i<difference; i++)
         {
-            bottom->deleteImage(toDelete[0]);
+            bottom->deleteImage(0);
         }
     }
 
     //assign the photos
     bottom->setPreviewItemAt(photoCounter, temp);
     photoCounter++;
-    if(photoCounter == bottom->myLabels.size())
+    if((unsigned)photoCounter == bottom->myLabels.size())
         photoCounter = 0;
     bottom->startAnimation(2500);
 }
@@ -218,11 +222,18 @@ void MainWindow::deleteCollection()
 void MainWindow::deleteSelection()
 {
     toDelete = bottom->deletePreviewItems();
-    for(int i=0; i<toDelete.size(); i++)
+    int passIn = currentCollection;
+    QUndoCommand *newCommand = new DeleteImageCommand(toDelete, *bottom, allCollections, passIn);
+    undoStack->push(newCommand);
+
+    /*
+    toDelete = bottom->deletePreviewItems();
+    for(unsigned int i=0; i<toDelete.size(); i++)
     {
         allCollections[currentCollection].removeAt(toDelete[i]);
         bottom->deleteImage(toDelete[i]);
     }
+    */
 }
 
 void MainWindow::createMenus()
@@ -276,7 +287,6 @@ void MainWindow::createMenus()
 
 void MainWindow::mainStartAnimation()
 {
-    cout << "In mainStartAnimation(). Should only be called once per PLAY COLLECTION" << endl;
     photoCounter = 0;
     if( leftPanel->currentRow() != -1) //if something is selected
     {

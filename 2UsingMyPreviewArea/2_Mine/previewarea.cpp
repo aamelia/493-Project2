@@ -55,7 +55,6 @@ void PreviewArea::addBlankImages(int num)
 void PreviewArea::setSelected(int index)
 {
     selectedLabels.at(index) = true;
-    cout << "Set selectedLabels[" << index << "] to True" << endl;
 }
 
 void PreviewArea::setUnselected(int index)
@@ -115,7 +114,6 @@ vector<int> PreviewArea::deletePreviewItems()
         bar = qobject_cast<FImage*>(foo);
         if(bar->isSelected)
         {
-            cout << "Success. Index = " << i << endl;
             toDelete.push_back(i);
         }
     }

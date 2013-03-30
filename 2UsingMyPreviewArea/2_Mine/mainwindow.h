@@ -5,6 +5,7 @@
 #include "flickrcollector.h"
 #include "imagecollector.h"
 #include "previewarea.h"
+#include "deleteimagecommand.h"
 
 class MainWindow : public QMainWindow
 {
@@ -43,6 +44,9 @@ private:
 
   vector<QStringList> allCollections;
   vector<int> toDelete;
+
+  QAction *deleteImageCommandAction;
+  QUndoStack *undoStack;
 
 signals:
   void replaceBottom();
